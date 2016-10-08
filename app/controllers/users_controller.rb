@@ -16,11 +16,22 @@ class UsersController < ApplicationController
       render 'new'
     end
   end
+  
+  def edit
+    @user = User.find(params[:id])
+  end
+  
+  def me?
+    @user = User.find(params[:id])
+    if current_user != @user
+      redirect_to root_path
+    end
+  end
 
   private
 
   def user_params
     params.require(:user).permit(:name, :email, :password,
-                                 :password_confirmation)
+                                 :password_confirmation, :age)
   end
 end
