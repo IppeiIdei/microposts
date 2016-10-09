@@ -6,4 +6,6 @@ class User < ActiveRecord::Base
                     format: { with: VALID_EMAIL_REGEX },
                     uniqueness: { case_sensitive: false }
   has_secure_password
+    # 年齢は必須入力かつ0以上の整数数値のみ
+  validates :age , numericality: { only_integer: true, greater_than_or_equal_to:0 } , presence: true
 end
