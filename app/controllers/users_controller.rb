@@ -1,7 +1,10 @@
 class UsersController < ApplicationController
+  before_action :logged_in_user, only: [:edit, :update]
+  before_action :me?, only: [:edit, :update]
   
-  def show # 追加
-   @user = User.find(params[:id])
+  def show 
+    @user = User.find(params[:id])
+    @microposts = @user.microposts.order(created_at: :desc)
   end
   
   def new
@@ -16,11 +19,31 @@ class UsersController < ApplicationController
       render 'new'
     end
   end
+  
+  def edit
+    @user = User.find(params[:id])
+  end
+  
+  def update
+    @user = User.find(params[:id])
+    if @user.update(user_params)
+       redirect_to @user
+    else
+      render 'edit'
+    end
+  end  
+  
+  def me?
+    @user = User.find(params[:id])
+    if current_user != @user
+      redirect_to root_path
+    end
+  end
 
   private
 
   def user_params
     params.require(:user).permit(:name, :email, :password,
-                                 :password_confirmation)
+                                 :password_confirmation, :age)
   end
 end
