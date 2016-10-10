@@ -1,4 +1,6 @@
 <h1>
   <%= gravatar_for @user %>
-  <%= @user.name %>
+  <%= "名前: " + @user.name %>
+  <br>
+  <%= "年齢: " + @user.age.to_s %>
 </h1>
