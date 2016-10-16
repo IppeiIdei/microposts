@@ -1,5 +1,5 @@
 class UsersController < ApplicationController
-  before_action :logged_in_user, only: [:edit, :update]
+  before_action :logged_in_user, only: [:edit, :update, :followers, :followings]
   before_action :me?, only: [:edit, :update]
   
   def show 
@@ -33,14 +33,27 @@ class UsersController < ApplicationController
     end
   end  
   
-  def me?
+
+  def followings
+    @user = User.find(params[:id])
+    @users = @user.following_users
+    render 'followings'
+  end
+  
+  def followers
+    @user = User.find(params[:id])
+    @users = @user.follower_users
+    render 'followers'
+  end
+  
+  private
+  
+   def me?
     @user = User.find(params[:id])
     if current_user != @user
-      redirect_to root_path
+       redirect_to root_path
     end
-  end
-
-  private
+   end
 
   def user_params
     params.require(:user).permit(:name, :email, :password,
